@@ -1,18 +1,16 @@
-import { ClerkLoaded, ClerkLoading, SignOutButton, UserButton, } from "@clerk/nextjs"
-import { Loader2 } from "lucide-react"
+"use client"
 
-export default function Home() {
- return (
-  <div className="mt-2">
-          <ClerkLoaded>
-            <SignOutButton>
-              <UserButton />
-            </SignOutButton>
-          </ClerkLoaded>
-          <ClerkLoading>
-            <Loader2 className="animate-spin text-muted-foreground" />
-          </ClerkLoading>
-        </div>
-  
- )
+import { Button } from "@/components/ui/button";
+import { useNewAccount } from "@/features/accounts/hooks/use-new-account"
+
+export default function Home(){
+  const {onOpen} = useNewAccount();
+
+  return (
+    <div>
+      <Button onClick={onOpen}>
+        Add an account
+      </Button>
+    </div>
+  )
 }
