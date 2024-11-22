@@ -43,7 +43,7 @@ const CategoriesPage = () => {
   return ( 
     <div className="max-w-screen-2xl mx-auto w-full -b-10 -mt-24">
       <Card className="border-none drop-shadow-sm">
-        <CardHeader className="gap-y-2 flex-row lg:items-center lg:justify-between">
+        <CardHeader className="gap-y-2 flex-col lg:items-center lg:justify-between lg:flex-row">
           <CardTitle className="text-xl line-clamp-1">
             Categories Page 
           </CardTitle>
