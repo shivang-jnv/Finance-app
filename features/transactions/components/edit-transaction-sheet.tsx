@@ -21,7 +21,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { FormValue } from "hono/types";
 import { useConfirm } from "@/hooks/use-confirm";
 
 const formSchema = insertTransactionSchema.omit({
@@ -123,7 +122,7 @@ export const EditTransactionSheet = () => {
           </SheetTitle>
           <SheetDescription>
             Edit an existing transaction.
-          </SheetDescription>
+          </SheetDescription> 
         </SheetHeader>
         {isLoading? (
           <div className="absolute inset-0 flex items-center justify-center">

@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react";
 import { Loader2, Plus } from "lucide-react";
 
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
@@ -12,8 +13,34 @@ import { DataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { columns } from "./columns";
+import { UploadButton } from "./upload-button";
+import { ImportCard } from "./import-card";
+
+enum VARIANTS {
+  LIST = "LIST",
+  IMPORT = "IMPORT"
+}
+
+const INITIAL_IMPORT_RESULTS = {
+  data: [],
+  errors: [],
+  meta: {},
+}
 
 const TransactionsPage = () => {
+  const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+  const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
+
+  const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
+    setImportResults(results);
+    setVariant(VARIANTS.IMPORT);
+  }
+  
+  const onCancelImport = () => {
+    setImportResults(INITIAL_IMPORT_RESULTS);
+    setVariant(VARIANTS.LIST);
+  }
+
   const newTransaction = useNewTransaction();
   const deleteTransactions = useBulkDeleteTransactions();
   const transactionsQuery = useGetTransactions();
@@ -40,6 +67,18 @@ const TransactionsPage = () => {
     );
   }
 
+  if(variant === VARIANTS.IMPORT){
+    return (
+      <>
+      <ImportCard
+        data={importResults.data}
+        onCancel={onCancelImport}
+        onSubmit={() => {}}
+      />
+      </>
+    )
+  }
+
   return ( 
     <div className="max-w-screen-2xl mx-auto w-full -b-10 -mt-24">
       <Card className="border-none drop-shadow-sm">
@@ -47,10 +86,20 @@ const TransactionsPage = () => {
           <CardTitle className="text-xl line-clamp-1">
             Transaction History
           </CardTitle>
-          <Button size="sm" onClick={newTransaction.onOpen}>
+          <div className="flex flex-col lg:flex-row gap-y-2 items-center gap-x-2">
+          <Button 
+            size="sm" 
+            onClick={newTransaction.onOpen}
+            className="w-full lg:w-auto"
+          >
             <Plus className="size-4 mr-2"/>
             Add new
           </Button>
+          <UploadButton 
+            onUpload={onUpload}
+          />
+          </div>
+          
         </CardHeader>
         <CardContent> 
           <DataTable 

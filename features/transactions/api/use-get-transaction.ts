@@ -7,7 +7,7 @@ export const useGetTransaction = (id?: string) => {
     enabled: !!id,
     queryKey: ["transaction", {id}],
     queryFn: async () => {
-      //@ts-ignore
+      
       const response = await client.api.transactions[":id"].$get({
         param: {id}
       });
@@ -17,7 +17,9 @@ export const useGetTransaction = (id?: string) => {
       }
 
       const {data} = await response.json();
-      return data;
+      return {
+        ...data
+      }
     }
   })
   return query;
