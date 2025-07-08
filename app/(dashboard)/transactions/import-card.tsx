@@ -1,5 +1,6 @@
 import { useState } from "react";
-import {format, parse} from "date-fns";
+import {format} from "date-fns";
+import {parse} from "date-fns/parse";
 import {
   Card,
   CardContent,
@@ -10,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ImportTable } from "./import-table";
 import { convertAmountToMilliunits } from "@/lib/utils";
 
-const dateFormat = "yyyy-MM-dd HH:mm:ss";
+const dateFormat: string = "yyyy-MM-dd HH:mm:ss";
 const outputFormat = "yyyy-MM-dd";
 
 const requiredOptions = [
@@ -98,10 +99,10 @@ export const ImportCard = ({
       }, {});
     });
 
-    const formattedData = arrayOfData.map((item) => ({
+    const formattedData = arrayOfData.map((item: { [key: string]: any }) => ({
       ...item,
       amount: convertAmountToMilliunits(parseFloat(item.amount)),
-      date: format(parse(item.date, dateFormat, new Date()), outputFormat)
+      date: format(parse(String(item.date), dateFormat, new Date()), outputFormat),
     }));
 
     onSubmit(formattedData);
