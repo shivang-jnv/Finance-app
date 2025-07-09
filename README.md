@@ -117,4 +117,4 @@ MIT
 
 ## Deployment
 
-Deployed on [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=finance-app) .
+Deployed on [Vercel](https://finance-app-sigma-lovat.vercel.app) .
