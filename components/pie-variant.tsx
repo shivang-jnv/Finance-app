@@ -20,6 +20,15 @@ type Props = {
 };
 
 const PieVariant = ({ data }: Props) => {
+
+  //calculating percentage
+  const total = data?.reduce((sum, item) => sum + item.value, 0) || 0;
+  
+  const dataWithPercentage = data?.map(item => ({
+    ...item,
+    percent: total > 0 ? (item.value / total) : 0
+  }));
+
   return (
     <ResponsiveContainer width="100%" height={350}>
       <PieChart>
@@ -56,7 +65,7 @@ const PieVariant = ({ data }: Props) => {
         />
         <Tooltip content={CategoryTooltip} />
         <Pie
-          data={data}
+          data={dataWithPercentage}
           cx="50%"
           cy="50%"
           outerRadius={90}
