@@ -19,7 +19,7 @@ import { columns } from "./columns";
 import { UploadButton } from "./upload-button";
 import { ImportCard } from "./import-card";
 import { toast } from "sonner";
-import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions copy";
+import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
 
 enum VARIANTS {
   LIST = "LIST",
