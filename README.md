@@ -12,7 +12,7 @@ A modern, full-stack personal finance management application built with Next.js,
 - Serverless Postgres (Neon)
 
 ## Tech Stack
-- **Frontend:** Next.js 14, React 18, Tailwind CSS, Shadcn UI
+- **Frontend:** Next.js, React, Tailwind CSS, Shadcn UI
 - **Backend/API:** Hono (Edge), Drizzle ORM, Neon Postgres
 - **Auth:** Clerk
 - **State:** React Query, Zustand
