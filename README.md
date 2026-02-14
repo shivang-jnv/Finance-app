@@ -2,6 +2,8 @@
 
 A modern, full-stack personal finance management application built with Next.js, React, Drizzle ORM, Neon serverless Postgres, Clerk authentication, and Hono API framework. Track your accounts, categorize transactions, and visualize your financial health with beautiful charts and dashboards.
 
+Features **React Server Components**, **TanStack Virtual** for handling thousands of transactions, and **Optimistic UI** updates for a snappy, app-like feel. Visualizes income, expenses, and spending trends through interactive, lazy-loaded Recharts. Fully typed with **TypeScript** and **Zod** for end-to-end type safety.
+
 ## Features
 - User authentication (Clerk)
 - Account, category, and transaction CRUD
@@ -17,6 +19,18 @@ A modern, full-stack personal finance management application built with Next.js,
 - **Auth:** Clerk
 - **State:** React Query, Zustand
 - **Charts:** Recharts
+- **Database:** Neon Serverless Postgres
+- **ORM:** Drizzle
+
+## Production Polish & Performance
+- **Server Components:** Dashboard initial load moved to Server Components for zero-waterfall fetching.
+- **Virtualization:** `tanstack-virtual` implemented for transaction tables to handle thousands of rows smoothly.
+- **Lazy Loading:** Heavy chart components are lazy-loaded to reduce initial bundle size.
+- **Optimistic Updates:** Immediate UI feedback for creating, editing, and deleting transactions.
+- **Data Integrity:** Strict schema validation with Zod and type-safe API routes.
+- **Currency:** Full INR (₹) support with correct formatting and scaling.
+- **CSV Import:** Web Worker-based CSV parsing for jank-free large file imports.
+- **Accessibility:** Keyboard navigable date pickers and form elements.
 
 ## Getting Started
 
