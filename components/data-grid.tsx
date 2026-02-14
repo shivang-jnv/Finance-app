@@ -1,24 +1,34 @@
 "use client";
 
-import useGetSummary from "@/features/summary/api/use-get-summary";
-import { formatDateRange } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
+import { PiggyBank, TrendingUp, TrendingDown } from "lucide-react";
 
-//icons
-import { FaPiggyBank } from "react-icons/fa";
-import { FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6";
+import { formatDateRange } from "@/lib/utils";
 import { DataCard, DataCardLoading } from "@/components/data-card";
 
-const DataGrid = () => {
-  const { data, isLoading } = useGetSummary();
+interface DataGridProps {
+  data?: {
+    remainingAmount: number;
+    remainingChange: number;
+    incomeAmount: number;
+    incomeChange: number;
+    expensesAmount: number;
+    expensesChange: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    categories: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    days: any[];
+  }
+}
 
+const DataGrid = ({ data }: DataGridProps) => {
   const params = useSearchParams();
   const to = params.get("to") || undefined;
   const from = params.get("from") || undefined;
 
   const dateRangeLabel = formatDateRange({ from, to });
 
-  if (isLoading)
+  if (!data)
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
         <DataCardLoading />
@@ -26,29 +36,30 @@ const DataGrid = () => {
         <DataCardLoading />
       </div>
     );
+  
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
       <DataCard
         title="Remaining"
-        value={data?.remainingAmount}
-        percentChange={data?.remainingChange}
-        icon={FaPiggyBank}
+        value={data.remainingAmount}
+        percentChange={data.remainingChange}
+        icon={PiggyBank}
         variant="default"
         dateRange={dateRangeLabel}
       />
       <DataCard
         title="Income"
-        value={data?.incomeAmount}
-        percentChange={data?.incomeChange}
-        icon={FaArrowTrendUp}
+        value={data.incomeAmount}
+        percentChange={data.incomeChange}
+        icon={TrendingUp}
         variant="default"
         dateRange={dateRangeLabel}
       />
       <DataCard
         title="Expenses"
-        value={data?.expensesAmount}
-        percentChange={data?.expensesChange}
-        icon={FaArrowTrendDown}
+        value={data.expensesAmount}
+        percentChange={data.expensesChange}
+        icon={TrendingDown}
         variant="default"
         dateRange={dateRangeLabel}
       />

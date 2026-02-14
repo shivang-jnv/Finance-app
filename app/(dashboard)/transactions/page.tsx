@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 import { useBulkDeleteTransactions } from "@/features/transactions/api/use-bulk-delete-transactions"; 
@@ -13,11 +13,11 @@ import { transactions as transactionSchema} from "@/db/schema"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { columns } from "./columns";
 import { UploadButton } from "./upload-button";
 import { ImportCard } from "./import-card";
+import { DataTableLoading } from "@/components/data-table-loading";
 import { toast } from "sonner";
 import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
 
@@ -79,18 +79,7 @@ const TransactionsPage = () => {
 
   if(transactionsQuery.isLoading){
     return (
-      <div className="max-w-screen-2xl mx-auto w-full -b-10 -mt-24">
-        <Card className="border-none drop-shadow-sm">
-          <CardHeader>
-            <Skeleton className="h-8 w-48"/>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[500px] w-full flex items-center justify-center">
-              <Loader2 className="sizee-6 text-slate-300 animate-spin"/>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <DataTableLoading />
     );
   }
 
@@ -108,7 +97,7 @@ const TransactionsPage = () => {
   }
 
   return ( 
-    <div className="max-w-screen-2xl mx-auto w-full -b-10 -mt-24">
+    <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
       <Card className="border-none drop-shadow-sm">
         <CardHeader className="gap-y-2 flex-col lg:items-center lg:justify-between lg:flex-row">
           <CardTitle className="text-xl line-clamp-1">
@@ -139,6 +128,7 @@ const TransactionsPage = () => {
               deleteTransactions.mutate({ids})
             }}
             disabled={isDisabled}
+            virtualize={true}
           />
         </CardContent>
       </Card>

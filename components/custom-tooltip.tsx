@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { Separator } from "./ui/separator";
 import { formatCurrency } from "@/lib/utils";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload) return null;
 

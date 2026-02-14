@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import useGetSummary from "@/features/summary/api/use-get-summary";
-type Props = {};
+
 export const AccountFilter = () => {
   const router = useRouter();
   const pathname = usePathname();

@@ -1,0 +1,78 @@
+
+> finance-app@0.1.0 lint
+> next lint
+
+
+./app/(dashboard)/transactions/import-card.tsx
+93:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+103:67  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/(dashboard)/transactions/page.tsx
+16:10  Error: 'Skeleton' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./app/(dashboard)/transactions/upload-button.tsx
+7:23  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+14:25  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/[[...route]]/accounts.ts
+81:7  Error: Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free.  @typescript-eslint/ban-ts-comment
+
+./app/api/[[...route]]/categories.ts
+81:7  Error: Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free.  @typescript-eslint/ban-ts-comment
+
+./app/api/[[...route]]/route.ts
+13:7  Error: 'routes' is assigned a value but only used as a type.  @typescript-eslint/no-unused-vars
+
+./app/api/[[...route]]/transactions.ts
+16:10  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/account-filter.tsx
+17:6  Error: 'Props' is defined but never used.  @typescript-eslint/no-unused-vars
+17:14  Error: The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead.  @typescript-eslint/no-empty-object-type
+
+./components/category-tooltip.tsx
+1:10  Error: 'format' is defined but never used.  @typescript-eslint/no-unused-vars
+3:10  Error: 'convertAmountFromMilliunits' is defined but never used.  @typescript-eslint/no-unused-vars
+5:47  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/custom-tooltip.tsx
+5:45  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/data-charts.tsx
+8:11  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+9:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/data-grid.tsx
+17:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+18:11  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/date-picker.tsx
+4:10  Error: 'SelectRangeEventHandler' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/pie-variant.tsx
+3:3  Error: 'XAxis' is defined but never used.  @typescript-eslint/no-unused-vars
+42:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/radar-variant.tsx
+10:10  Error: 'formatPercentage' is defined but never used.  @typescript-eslint/no-unused-vars
+13:7  Error: 'COLORS' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./components/radial-variant.tsx
+2:3  Error: 'Tooltip' is defined but never used.  @typescript-eslint/no-unused-vars
+3:3  Error: 'XAxis' is defined but never used.  @typescript-eslint/no-unused-vars
+49:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/ui/calendar.tsx
+57:25  Error: 'props' is defined but never used.  @typescript-eslint/no-unused-vars
+58:26  Error: 'props' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/ui/data-table.tsx
+90:9  Error: 'virtualRows' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./components/ui/input.tsx
+5:18  Error: An interface declaring no members is equivalent to its supertype.  @typescript-eslint/no-empty-object-type
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules

@@ -1,7 +1,7 @@
-import { format } from "date-fns";
 import { Separator } from "./ui/separator";
-import { convertAmountFromMilliunits, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CategoryTooltip = ({ active, payload }: any) => {
   if (!active || !payload) return null;
 

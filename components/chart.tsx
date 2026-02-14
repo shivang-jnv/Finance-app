@@ -1,3 +1,5 @@
+"use client";
+
 import { 
   Card, 
   CardContent, 
@@ -10,10 +12,9 @@ import {
   LineChart,
   Loader2,
 } from "lucide-react";
-import AreaVariant from "@/components/area-variant";
-import BarVariant from "@/components/bar-variant";
-import LineVariant from "@/components/line-variant";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
 import {
   Select,
   SelectTrigger,
@@ -21,7 +22,19 @@ import {
   SelectItem,
   SelectValue,
 } from "./ui/select";
+
 import { Skeleton } from "./ui/skeleton";
+
+const AreaVariant = dynamic(() => import("@/components/area-variant"), {
+  loading: () => <Skeleton className="h-[350px] w-full" />,
+});
+const BarVariant = dynamic(() => import("@/components/bar-variant"), {
+  loading: () => <Skeleton className="h-[350px] w-full" />,
+});
+const LineVariant = dynamic(() => import("@/components/line-variant"), {
+  loading: () => <Skeleton className="h-[350px] w-full" />,
+});
+
 
 type Props = {
   data?: {
@@ -101,7 +114,7 @@ export const ChartLoading = () => {
       <CardHeader className="flex lg:flex-row lg:items-center justify-between lg:space-y-0 space-y-2">
         <div className="space-y-2">
           <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-8 lg:w-[120px] w-full" />
+          <Skeleton className="h-9 lg:w-[120px] w-full" />
         </div>
       </CardHeader>
       <CardContent>

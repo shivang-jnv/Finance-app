@@ -13,7 +13,6 @@ import {
   categories,
   accounts,
 } from "@/db/schema";
-import { error } from "console";
 
 const app = new Hono()
   .get(

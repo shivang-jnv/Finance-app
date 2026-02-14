@@ -7,10 +7,7 @@ import {
   PolarGrid,
   PolarRadiusAxis,
 } from "recharts";
-import { formatPercentage } from "@/lib/utils";
 import CategoryTooltip from "@/components/category-tooltip";
-
-const COLORS = ["#0062FF", "#12C6FF", "#FF647F", "#FF9354"];
 
 type Props = {
   data?: {

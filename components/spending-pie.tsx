@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Target, Radar, FileSearch, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -8,10 +10,20 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import PieVariant from "@/components/pie-variant";
-import RadarVariant from "./radar-variant";
-import RadialVariant from "./radial-variant";
+
 import { Skeleton } from "./ui/skeleton";
+import dynamic from "next/dynamic";
+
+const PieVariant = dynamic(() => import("@/components/pie-variant"), {
+  loading: () => <Skeleton className="h-[350px] w-full" />,
+});
+const RadarVariant = dynamic(() => import("./radar-variant"), {
+  loading: () => <Skeleton className="h-[350px] w-full" />,
+});
+const RadialVariant = dynamic(() => import("./radial-variant"), {
+  loading: () => <Skeleton className="h-[350px] w-full" />,
+});
+
 
 type Props = {
   data?: {
@@ -86,7 +98,7 @@ export const SpendingPieLoading = () => {
       <CardHeader className="flex lg:flex-row lg:items-center justify-between lg:space-y-0 space-y-2">
         <div className="space-y-2">
           <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-8 lg:w-[120px] w-full" />
+          <Skeleton className="h-9 lg:w-[120px] w-full" />
         </div>
       </CardHeader>
       <CardContent>

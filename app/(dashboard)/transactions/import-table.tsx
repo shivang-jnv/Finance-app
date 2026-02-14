@@ -7,6 +7,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TableHeadSelect } from "./table-head-select";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useRef } from "react";
+
 
 type Props = {
   headers: string[];
@@ -20,16 +23,27 @@ export const ImportTable = ({
   body,
   selectedColumns,
   onTableHeadSelectChange,
-}:Props) => {
+}: Props) => {
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: body.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 50, // Estimate row height
+    overscan: 5,
+  });
 
   return (
-    <div className="rounded-md overflow-hidden border">
-      <Table>
-        <TableHeader className="bg-muted">
-          <TableRow>
+    <div 
+      ref={parentRef}
+      className="rounded-md overflow-auto border h-[500px]"
+    >
+      <Table className="grid w-max min-w-full">
+        <TableHeader className="bg-muted sticky top-0 z-10 grid">
+          <TableRow className="flex w-full">
             {headers.map((_item, index) => (
-              <TableHead key={index}>
-                <TableHeadSelect 
+              <TableHead key={index} className="w-[200px] flex-shrink-0">
+                <TableHeadSelect
                   columnIndex={index}
                   selectedColumns={selectedColumns}
                   onChange={onTableHeadSelectChange}
@@ -38,19 +52,34 @@ export const ImportTable = ({
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {body.map((row: string[], index) => (
-            <TableRow key={index}>
-              {row.map((cell, index) => (
-                <TableCell key={index}>
-                  {cell}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+        <TableBody 
+          className="grid relative"
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = body[virtualRow.index];
+            return (
+              <TableRow
+                key={virtualRow.index}
+                className="absolute top-0 left-0 flex w-full"
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                  height: `${virtualRow.size}px`
+                }}
+              >
+                {row.map((cell, index) => (
+                  <TableCell key={index} className="w-[200px] flex-shrink-0 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {cell}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
-
     </div>
   );
 };
+

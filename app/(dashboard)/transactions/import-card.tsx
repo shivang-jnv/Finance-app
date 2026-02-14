@@ -27,6 +27,7 @@ interface SelectedColumnsState {
 type Props = {
   data: string[][];
   onCancel: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: (data: any) => void;
 };
 
@@ -65,7 +66,7 @@ export const ImportCard = ({
   const progress = Object.values(selectedColumns).filter(Boolean).length;
 
   const handleContinue = () => {
-    ``
+
     const getColumnIndex = (column: string) => {
       return column.split("_")[1];
     };
@@ -89,6 +90,7 @@ export const ImportCard = ({
     };
 
     const arrayOfData = mappedData.body.map((row) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return row.reduce((acc: any, cell, index) => {
         const header = mappedData.headers[index];
 
@@ -99,6 +101,7 @@ export const ImportCard = ({
       }, {});
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedData = arrayOfData.map((item: { [key: string]: any }) => ({
       ...item,
       amount: convertAmountToMilliunits(parseFloat(item.amount)),

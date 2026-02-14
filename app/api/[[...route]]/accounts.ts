@@ -78,7 +78,7 @@ const app = new Hono()
         return c.json({error: "Unauthorized"}, 401);
       }
 
-      //@ts-ignore
+      // @ts-expect-error: Known issue with drizzle-orm types for insert with return
       const [data] = await db.insert(accounts).values({
         id: createId(),
         userId: auth.userId,

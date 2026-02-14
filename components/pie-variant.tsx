@@ -1,6 +1,5 @@
 import {
   Tooltip,
-  XAxis,
   ResponsiveContainer,
   Cell,
   PieChart,
@@ -39,6 +38,7 @@ const PieVariant = ({ data }: Props) => {
           iconType="circle"
           content={({ payload }) => (
             <ul className="flex flex-col space-y-2">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {payload?.map((entry: any, index: number) => (
                 <li
                   key={`item-${index}`}

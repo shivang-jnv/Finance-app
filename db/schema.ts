@@ -1,5 +1,5 @@
 import {z} from "zod";
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, index } from "drizzle-orm/pg-core";
 import {createInsertSchema} from "drizzle-zod";
 import { relations } from 'drizzle-orm';
 
@@ -8,6 +8,10 @@ export const accounts = pgTable("accounts", {
   plaidId: text("plaid_id"),
   name: text("name").notNull(),
   userId: text("user_id").notNull(),
+}, (table) => {
+  return {
+    userIdIdx: index("accounts_user_id_idx").on(table.userId),
+  };
 });
 
 export const accountsRelations = relations(accounts, ({many}) => ({
@@ -21,6 +25,10 @@ export const categories = pgTable("categories", {
   plaidId: text("plaid_id"),
   name: text("name").notNull(),
   userId: text("user_id").notNull(),
+}, (table) => {
+  return {
+    userIdIdx: index("categories_user_id_idx").on(table.userId),
+  };
 });
 
 export const categoriesRelations  = relations(categories, ({many}) => ({
@@ -41,6 +49,12 @@ export const transactions = pgTable("transactions", {
   categoryId: text("category_id").references(() => categories.id, {
     onDelete: "set null",
   }),
+}, (table) => {
+  return {
+    dateIdx: index("transactions_date_idx").on(table.date),
+    accountIdIdx: index("transactions_account_id_idx").on(table.accountId),
+    categoryIdIdx: index("transactions_category_id_idx").on(table.categoryId),
+  };
 });
 
 export const transactionsRelations  = relations(transactions, ({one}) => ({

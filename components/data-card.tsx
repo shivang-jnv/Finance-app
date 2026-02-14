@@ -1,4 +1,4 @@
-import { IconType } from "react-icons/lib";
+import { LucideIcon } from "lucide-react";
 import { VariantProps, cva } from "class-variance-authority";
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
 import {CountUp} from "@/components/count-up";
@@ -45,7 +45,7 @@ interface Props extends BoxVariants, IconVariants {
   title: string;
   value?: number;
   percentChange?: number;
-  icon: IconType;
+  icon: LucideIcon;
   dateRange: string;
 }
 

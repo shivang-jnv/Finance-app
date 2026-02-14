@@ -6,9 +6,13 @@ import { useCreateTransaction } from "@/features/transactions/api/use-create-tra
 
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useCreateCategory } from "@/features/categories/api/use-create-category";
+import { useNewCategory } from "@/features/categories/hooks/use-new-category";
+
 
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
+import { useNewAccount } from "@/features/accounts/hooks/use-new-account";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
+
 
 import { insertTransactionSchema } from "@/db/schema";
 import { 
@@ -34,6 +38,7 @@ export const NewTransactionSheet = () => {
 
   const categoryQuery = useGetCategories();
   const categoryMutation = useCreateCategory();
+  const categoryHook = useNewCategory();
   const onCreateCategory = (name: string) => categoryMutation.mutate({
     name
   });
@@ -44,6 +49,7 @@ export const NewTransactionSheet = () => {
 
   const accountQuery = useGetAccounts();
   const accountMutation = useCreateAccount();
+  const accountHook = useNewAccount();
   const onCreateAccount = (name: string) => accountMutation.mutate({
     name
   });
@@ -51,6 +57,7 @@ export const NewTransactionSheet = () => {
     label: account.name,
     value: account.id,
   }));
+
 
   const isPending = 
     createMutation.isPending || 
@@ -92,9 +99,9 @@ export const NewTransactionSheet = () => {
               onSubmit={onSubmit}
               disabled={isPending}
               categoryOptions={categoryOptions}
-              onCreateCategory={onCreateCategory}
+              onCreateCategory={() => categoryHook.onOpen()}
               accountOptions={accountOptions}
-              onCreateAccount ={onCreateAccount}
+              onCreateAccount={() => accountHook.onOpen()}
             />
           )
         }
