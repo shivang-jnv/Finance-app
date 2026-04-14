@@ -3,7 +3,7 @@
 A high-performance, Full Stack personal finance SaaS architected for edge environments. It lets you track your accounts, categorize transactions, and visualize your financial health with beautiful charts and dashboards.
 Built with Next.js, React, Drizzle ORM, Neon serverless Postgres and Hono API, It handles high-volume transaction ingestion, complex time-series aggregations, and provides a desktop-class reactive UI without compromising on network payloads or database compute limits.
 
-## 🏗 Architecture & Technical Decisions
+## Architecture & Technical Decisions
 
 This project is built to scale horizontally by operating statelessly at the edge and pushing heavy computation down to the database layer.
 
@@ -29,13 +29,13 @@ Thousands of rows of imported CSV data will quickly induce "Out of Memory" error
 
 ---
 
-## ✨ Features
+## Features
 * **Stateless Authentication:** Managed B2B/B2C identity via **Clerk**, verifying JWTs instantly in Edge middleware without database session lookups.
 * **Bulk Data Ingestion:** Web Worker-based CSV parsing combined with atomic bulk SQL statements for jank-free large batch imports.
 * **Interactive Dashboards:** Lazy-loaded **Recharts** rendering dynamically composed time-series and categorical aggregations.
 * **Component System:** Accessible, headless UI primitives via **Radix UI** combined with zero-runtime-overhead **Tailwind CSS** (Shadcn UI).
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone & Install
 ```bash
@@ -66,7 +66,7 @@ npm run dev
 ```
 Visit [http://localhost:3000](http://localhost:3000).
 
-## 🛠 Available Scripts
+## Available Scripts
 * `npm run dev` - Start Next.js in development mode with Hono server.
 * `npm run db:generate` - Compile TypeScript schemas into raw Postgres SQL migrations.
 * `npm run db:migrate` - Execute pending SQL migrations against the active Neon database.
