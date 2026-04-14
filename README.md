@@ -1,6 +1,7 @@
 # Finance App
 
 A high-performance, Full Stack personal finance SaaS architected for edge environments. It lets you track your accounts, categorize transactions, and visualize your financial health with beautiful charts and dashboards.
+
 Built with Next.js, React, Drizzle ORM, Neon serverless Postgres and Hono API, It handles high-volume transaction ingestion, complex time-series aggregations, and provides a desktop-class reactive UI without compromising on network payloads or database compute limits.
 
 ## Architecture & Technical Decisions
