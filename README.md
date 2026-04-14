@@ -1,134 +1,76 @@
 # Finance App
 
-A modern, full-stack personal finance management application built with Next.js, React, Drizzle ORM, Neon serverless Postgres, Clerk authentication, and Hono API framework. Track your accounts, categorize transactions, and visualize your financial health with beautiful charts and dashboards.
+A high-performance, Full Stack personal finance SaaS architected for edge environments. It lets you track your accounts, categorize transactions, and visualize your financial health with beautiful charts and dashboards.
+Built with Next.js, React, Drizzle ORM, Neon serverless Postgres and Hono API, It handles high-volume transaction ingestion, complex time-series aggregations, and provides a desktop-class reactive UI without compromising on network payloads or database compute limits.
 
-Features **React Server Components**, **TanStack Virtual** for handling thousands of transactions, and **Optimistic UI** updates for a snappy, app-like feel. Visualizes income, expenses, and spending trends through interactive, lazy-loaded Recharts. Fully typed with **TypeScript** and **Zod** for end-to-end type safety.
+## 🏗 Architecture & Technical Decisions
 
-## Features
-- User authentication (Clerk)
-- Account, category, and transaction CRUD
-- Bulk import and delete for transactions
-- Dashboard with summary statistics and charts
-- RESTful API (Hono, Edge runtime)
-- Responsive UI with Tailwind CSS and Shadcn UI
-- Serverless Postgres (Neon)
+This project is built to scale horizontally by operating statelessly at the edge and pushing heavy computation down to the database layer.
 
-## Tech Stack
-- **Frontend:** Next.js, React, Tailwind CSS, Shadcn UI
-- **Backend/API:** Hono (Edge), Drizzle ORM, Neon Postgres
-- **Auth:** Clerk
-- **State:** React Query, Zustand
-- **Charts:** Recharts
-- **Database:** Neon Serverless Postgres
-- **ORM:** Drizzle
+### 1. The Compute Layer: Vercel Edge + Hono RPC
+Standard Next.js Route Handlers suffer from cold-start latency and lack built-in end-to-end type safety. 
+* **Decision:** We embedded **Hono** inside the Next.js App Router (`export const runtime = 'edge'`).
+* **Why:** This grants extremely lightweight routing capabilities while specifically leveraging `hono/client` for strict RPC (Remote Procedure Call) patterns. The frontend client gets perfectly inferred request inputs and response types synced from our backend Zod schemas, eliminating `any` types and manual fetch interfaces.
 
-## Production Polish & Performance
-- **Server Components:** Dashboard initial load moved to Server Components for zero-waterfall fetching.
-- **Virtualization:** `tanstack-virtual` implemented for transaction tables to handle thousands of rows smoothly.
-- **Lazy Loading:** Heavy chart components are lazy-loaded to reduce initial bundle size.
-- **Optimistic Updates:** Immediate UI feedback for creating, editing, and deleting transactions.
-- **Data Integrity:** Strict schema validation with Zod and type-safe API routes.
-- **Currency:** Full INR (₹) support with correct formatting and scaling.
-- **CSV Import:** Web Worker-based CSV parsing for jank-free large file imports.
-- **Accessibility:** Keyboard navigable date pickers and form elements.
+### 2. The Data Layer: Neon Serverless Postgres + Drizzle ORM
+Traditional Postgres instances (RDS) rely on long-lived TCP connection pools, which are immediately exhausted by horizontally scaling, ephemeral Serverless Edge workers.
+* **Decision:** We use **Neon Serverless** paired with the **Drizzle ORM** `neon-http` driver.
+* **Why:** Instead of opening persistent database sockets, Drizzle compiles SQL down to raw strings and executes them instantly over standard HTTP/HTTPS `fetch` requests via Neon's connection proxy. This provides sub-millisecond connection times, circumvents the Edge's TCP restrictions, and protects the database from connection starvation under heavy traffic.
 
-## Getting Started
+### 3. State & Concurrency: TanStack Query + Optimistic UI
+A finance application demands a snappy, desktop-level UX and cannot wait for roundtrip network latency on every edit or deletion.
+* **Decision:** **TanStack Query** acts as our asynchronous state manager with strict `onMutate` rollback handlers.
+* **Why:** We utilize Optimistic UI updates. When a user edits a transaction, we intercept the request, immediately mutate the local `useQuery` cache to reflect the new state, and execute the HTTP `PATCH` in the background. If the request violates a database constraint, the query cache safely rolls back to a preserved snapshot of the previous state.
 
-### 1. Clone the repository
-```bash
-git clone <your-repo-url>
-cd finance-app
-```
-
-### 2. Install dependencies
-```bash
-npm install
-# or
-yarn install
-```
-
-### 3. Set up environment variables
-Create a `.env.local` file in the root with the following variables:
-```env
-DATABASE_URL=postgres://<user>:<password>@<host>/<db>
-CLERK_USER_ID=<your-test-user-id> # For seeding
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-### 4. Database setup (Neon + Drizzle)
-- Configure your Neon Postgres database and set `DATABASE_URL` accordingly.
-- Generate Drizzle migrations:
-  ```bash
-  npm run db:generate
-  ```
-- Run migrations:
-  ```bash
-  npm run db:migrate
-  ```
-- (Optional) Seed the database with sample data:
-  ```bash
-  npm run db:seed
-  ```
-
-### 5. Start the development server
-```bash
-npm run dev
-```
-Visit [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Scripts
-- `dev` - Start Next.js in development mode
-- `build` - Build for production
-- `start` - Start production server
-- `lint` - Run ESLint
-- `db:generate` - Generate Drizzle migrations
-- `db:migrate` - Run migrations
-- `db:seed` - Seed the database
-- `db:studio` - Open Drizzle Studio
-
-## Database Schema
-- **accounts**: id, plaidId, name, userId
-- **categories**: id, plaidId, name, userId
-- **transactions**: id, amount, payee, notes, date, accountId, categoryId
-
-## API Overview
-All endpoints are under `/api` and require authentication.
-
-### Accounts
-- `GET /api/accounts` - List accounts
-- `GET /api/accounts/:id` - Get account by ID
-- `POST /api/accounts` - Create account
-- `PATCH /api/accounts/:id` - Update account
-- `DELETE /api/accounts/:id` - Delete account
-- `POST /api/accounts/bulk-delete` - Bulk delete accounts
-
-### Categories
-- `GET /api/categories` - List categories
-- `GET /api/categories/:id` - Get category by ID
-- `POST /api/categories` - Create category
-- `PATCH /api/categories/:id` - Update category
-- `DELETE /api/categories/:id` - Delete category
-- `POST /api/categories/bulk-delete` - Bulk delete categories
-
-### Transactions
-- `GET /api/transactions` - List transactions (filter by date/account)
-- `GET /api/transactions/:id` - Get transaction by ID
-- `POST /api/transactions` - Create transaction
-- `PATCH /api/transactions/:id` - Update transaction
-- `DELETE /api/transactions/:id` - Delete transaction
-- `POST /api/transactions/bulk-create` - Bulk create transactions
-- `POST /api/transactions/bulk-delete` - Bulk delete transactions
-
-### Summary
-- `GET /api/summary` - Get dashboard summary (income, expenses, remaining, top categories, daily breakdown)
-
-## License
-MIT
+### 4. Performance: SQL Push-Downs & Virtualization
+Thousands of rows of imported CSV data will quickly induce "Out of Memory" errors on limited Edge functions and freeze the browser DOM.
+* **Decision 1 (Frontend):** We use **TanStack Virtual** to implement windowing. Even if an account has 10,000 transactions, the DOM strictly renders only the ~15 rows currently within the viewport, ensuring 60fps scrolling and zero memory bloat.
+* **Decision 2 (Backend):** We entirely avoid the N+1 problem and in-memory JS array reduction. Instead of pulling rows into the Edge to calculate dashboards, we push computation to Neon using raw SQL aggregations (`SUM(CASE WHEN...)`, conditional `GROUP BY`). The Edge API routes data natively from O(N) database operations into O(1) payload responses.
 
 ---
 
-> Built using Next.js, Drizzle ORM, Neon, Clerk, and Hono.
+## ✨ Features
+* **Stateless Authentication:** Managed B2B/B2C identity via **Clerk**, verifying JWTs instantly in Edge middleware without database session lookups.
+* **Bulk Data Ingestion:** Web Worker-based CSV parsing combined with atomic bulk SQL statements for jank-free large batch imports.
+* **Interactive Dashboards:** Lazy-loaded **Recharts** rendering dynamically composed time-series and categorical aggregations.
+* **Component System:** Accessible, headless UI primitives via **Radix UI** combined with zero-runtime-overhead **Tailwind CSS** (Shadcn UI).
 
-## Deployment
+## 🚀 Getting Started
 
-Deployed on [Vercel](https://finance-app-sigma-lovat.vercel.app) .
+### 1. Clone & Install
+```bash
+git clone <your-repo-url>
+cd finance-app
+npm install
+```
+
+### 2. Environment Variables
+Create a `.env.local` file explicitly mapping to your Neon and Clerk instances:
+```env
+DATABASE_URL=postgres://<user>:<password>@<host>/<db>
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 3. Database Migration
+Deploy the Drizzle schema to Neon:
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+### 4. Run Development Server
+```bash
+npm run dev
+```
+Visit [http://localhost:3000](http://localhost:3000).
+
+## 🛠 Available Scripts
+* `npm run dev` - Start Next.js in development mode with Hono server.
+* `npm run db:generate` - Compile TypeScript schemas into raw Postgres SQL migrations.
+* `npm run db:migrate` - Execute pending SQL migrations against the active Neon database.
+* `npm run db:studio` - Boot a local Drizzle Studio instance for direct DB manipulation.
+
+---
+> Architected with Next.js Edge, Drizzle ORM, Neon Postgres, Clerk, and Hono RPC.
